@@ -1,0 +1,73 @@
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: ClientRegistration
+metadata:
+  name: workload-web-no-custom-ca
+  namespace: jeremy
+spec:
+  authServerSelector:
+    matchLabels:
+      env: production
+      name: auth0-authserver
+  authorizationGrantTypes:
+    - authorization_code
+    - client_credentials
+    - refresh_token
+  clientAuthenticationMethod: client_secret_basic
+  redirectURIs:
+    - https://workload-web-no-custom-ca.jeremy.run.upgrade.tapsme.org/login/oauth2/code/workload-web-no-custom-ca
+    - http://workload-web-no-custom-ca.jeremy.run.upgrade.tapsme.org/login/oauth2/code/workload-web-no-custom-ca
+  scopes:
+    - name: openid
+    - name: email
+    - name: profile
+    - name: "roles"
+    - name: "message.read"
+---
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ResourceClaim
+metadata:
+  name: workload-web-no-custom-ca
+  namespace: jeremy
+spec:
+  ref:
+    apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+    kind: ClientRegistration
+    name: workload-web-no-custom-ca
+    namespace: jeremy
+---
+apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+kind: ClientRegistration
+metadata:
+  name: workload-web-with-custom-ca
+  namespace: jeremy
+spec:
+  authServerSelector:
+    matchLabels:
+      env: production
+      name: auth0-authserver-custom-cert
+  authorizationGrantTypes:
+    - authorization_code
+    - client_credentials
+    - refresh_token
+  clientAuthenticationMethod: client_secret_basic
+  redirectURIs:
+    - https://workload-web-with-custom-ca.jeremy.run.upgrade.tapsme.org/login/oauth2/code/workload-web-with-custom-ca
+    - http://workload-web-with-custom-ca.jeremy.run.upgrade.tapsme.org/login/oauth2/code/workload-web-with-custom-ca
+  scopes:
+    - name: openid
+    - name: email
+    - name: profile
+    - name: "roles"
+    - name: "message.read"
+---
+apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+kind: ResourceClaim
+metadata:
+  name: workload-web-with-custom-ca
+  namespace: jeremy
+spec:
+  ref:
+    apiVersion: sso.apps.tanzu.vmware.com/v1alpha1
+    kind: ClientRegistration
+    name: workload-web-with-custom-ca
+    namespace: jeremy

@@ -1,0 +1,38 @@
+apiVersion: carto.run/v1alpha1
+kind: Workload
+metadata:
+  labels:
+    app.kubernetes.io/part-of: workload-web-with-custom-ca
+    apps.tanzu.vmware.com/workload-type: web
+    apps.tanzu.vmware.com/auto-configure-actuators: "true"
+    apps.tanzu.vmware.com/has-tests: "true"
+  name: workload-web-with-custom-ca
+  namespace: jeremy
+spec:
+  build:
+    env:
+      - name: BP_JVM_VERSION
+        value: "8"
+  serviceClaims:
+    - name: workload-web-with-custom-ca
+      ref:
+        apiVersion: services.apps.tanzu.vmware.com/v1alpha1
+        kind: ResourceClaim
+        name: workload-web-with-custom-ca
+  params:
+  - name: annotations
+    value:
+      autoscaling.knative.dev/minScale: "1"
+  - name: scanning_source_policy
+    value: lax-scan-policy
+  - name: scanning_image_policy
+    value: lax-scan-policy
+  - name: testing_pipeline_matching_labels
+    value:
+      apps.tanzu.vmware.com/language: java
+      apps.tanzu.vmware.com/pipeline: test
+  source:
+    git:
+      url: https://github.com/x95castle1/spring-rest-security-232.git
+      ref:
+        branch: main
