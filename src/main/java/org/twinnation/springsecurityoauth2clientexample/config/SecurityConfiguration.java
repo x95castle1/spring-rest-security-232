@@ -20,8 +20,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 			  .and()
 			    .csrf().disable()
 			    .authorizeRequests()
-			        .anyRequest()
-			            .authenticated().and().oauth2Login();
+						.mvcMatchers("/actuator/**").permitAll()
+			      .anyRequest()
+			        .authenticated().and().oauth2Login();
 	}
 	
 }
